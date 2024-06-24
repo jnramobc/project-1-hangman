@@ -18,3 +18,8 @@
 
 
 
+/*
+git add -A
+git commit -m "message describing code changes"
+git push origin main
+*/
