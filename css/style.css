@@ -8,6 +8,10 @@
         font-style: normal;
       }
 
+body {
+background-color: orange;
+}
+
 h1 {
     text-align: center;
     color: blue;
@@ -25,7 +29,7 @@ h2  {
 
 #alpha-selector {
     text-align: center;
-    font-size: 18px;
+    font-size: 12px;
 }
 
 .box {
@@ -39,3 +43,32 @@ ul #alpha-selector {
     border-radius: 10%;
     border-color: blue;
 }
+
+.spaceman-lines {
+    display:ruby;
+    color: blue;
+    font-weight: 900;
+    font-size: 95px;
+    
+}
+
+button {
+    margin: 10px;
+    font-size: 30px;
+    background-color: transparent;
+    border: 1px solid rgba(0,0,0,.1);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+
+  }
+
+  button:hover {
+    border: 1px solid rgba(0,0,0,0.5);
+    cursor: grab;
+  }
+
+ div.hangmen {
+    white-space: pre;
+    font-size: 40 px;
+ }
