@@ -1,99 +1,134 @@
 /*-------------------------------- Constants --------------------------------*/
-const wordsList = ["Babble","Babies","Beagle","Pacify","Wacked",
-                   "Yachts","Puzzle","Fizzed","Snazzy","Dazzle"]
+const wordsList = ["astronaut", "comet", "galaxy", "meteor", "nebula", "orbit", "planet",
+  "satellite", "solar", "spaceship", "star", "supernova", "telescope", 
+  "universe", "venus", "gravity", "cosmos", "eclipse", "astronomy", 
+  "blackhole", "milkyway", "constellation", "spacesuit", "launchpad"]
 
 const hangmanPictures = [`
-    +---+
-    |     |
-          |
-          |
-          |
-          |
-  =========`, `
-    +---+
-    |     |
-    O     |
-          |
-          |
-          |
-  =========`, `
-    +---+
-    |     |
-    O     |
-    |     |
-          |
-          |
-  =========`, `
-    +---+
-    |     |
-    O     |
-   /|     |
-          |
-          |
-  ========= `, `
-    +---+
-    |     |
-    O     |
-   /|\    |
-          |
-          |
-  =========`, `
-    +---+
-    |     |
-    O     |
-   /|\    |
-   /      |
-          |
-  ========= `, `
-    +---+
-    |     |
-    O     |
-   /|\    |
-   / \    |
-          |
-  ========= `]
+  +---+
+  |     |
+        |
+        |
+        |
+        |
+=========`, `
+  +---+
+  |     |
+  O     |
+        |
+        |
+        |
+=========`, `
+  +---+
+  |     |
+  O     |
+  |     |
+        |
+        |
+=========`, `
+  +---+
+  |     |
+  O     |
+ /|     |
+        |
+        |
+========= `, `
+  +---+
+  |     |
+  O     |
+ /|\\    |
+        |
+        |
+=========`, `
+  +---+
+  |     |
+  O     |
+ /|\\    |
+ /      |
+        |
+========= `, `
+  +---+
+  |     |
+  O     |
+ /|\\    |
+ / \\    |
+        |
+========= `];
+
 
 /*---------------------------- Variables (state) ----------------------------*/
 
-let lettersLeft = 26;
-let turnsLeft= 6;
-let hangmanStatus = hangmanPictures[0];
-let letterChoice;
-let randomWord;
+let wrongGuesses= 0;
+const guessedLetters = [];
+const maxWrongGuesses = hangmanPictures.length - 1;
+const randomWord = wordsList[Math.floor(Math.random() * wordsList.length)].toUpperCase();
 /*------------------------ Cached Element References ------------------------*/
 
-const displayMessageEl = document.querySelector('#display-message');
-const alphaSelectorEl = document.querySelectorAll('.box');
-const spaceLinesEl = document.querySelectorAll('.line');
-const bodyElement = document.querySelector("body");
-const sectionEl = document.querySelector('.spaceman-lines')
-let divElement = document.querySelector('.hangmen')
+const wordContainer = document.querySelector('.spaceman-lines');
+const messageElement = document.getElementById('display-message');
+const hangmanElement = document.querySelector('.hangmen');
+const alphaButtons = document.querySelectorAll('#alpha-selector button');
 /*-------------------------------- Functions --------------------------------*/
-function pickWord(list) {
-  const idx = Math.floor(Math.random() * wordsList.length)
-  randomWord = list[idx]
-  return randomWord
+
+const updateDisplayedWord = () => {
+wordContainer.innerHTML = '';
+for (let i = 0; i < randomWord.length; i++) {
+    const letterDiv = document.createElement('div');
+    letterDiv.classList.add('line');
+    if (guessedLetters.includes(randomWord[i])) {
+        letterDiv.textContent = randomWord[i];
+    } else {
+        letterDiv.textContent = '_';
+    }
+    wordContainer.appendChild(letterDiv);
+}
 }
 
-pickWord(wordsList)
-
-divElement.textContent = hangmanPictures[0];
-sectionEl.before(divElement);
-
-const getLetterchoice = () => {
-    
+const updateMessage = (message) => {
+messageElement.textContent = message;
 }
 
-const updateDisplay = () => {
-    if (turnsLeft >=1) 
-        displayMessageEl.textContent = "Choose a letter"
+const updateHangmanPicture = () => {
+hangmanElement.innerHTML = `<pre>${hangmanPictures[wrongGuesses]}</pre>`;
 }
 
-updateDisplay()
-let chooseLetter = () => {
-
+const handleGuess = (letter) => {
+if (guessedLetters.includes(letter) || wrongGuesses >= maxWrongGuesses) {
+    return; 
 }
+
+guessedLetters.push(letter);
+
+if (randomWord.includes(letter)) {
+    updateDisplayedWord();
+    if (randomWord.split('').every(char => guessedLetters.includes(char))) {
+        updateMessage('Congratulations! You saved the spaceman!');
+    } else {
+        updateMessage('Choose a letter');
+    }
+} else {
+    wrongGuesses++;
+    updateHangmanPicture();
+    if (wrongGuesses >= maxWrongGuesses) {
+        updateMessage('Game Over! The spaceman is lost. Refresh to play Again!');
+    } else {
+        updateMessage('Choose a letter');
+    }
+}
+}
+
+const init = () => {
+updateDisplayedWord();
+updateMessage('Guess the word to save the spaceman, choose a letter!');
+updateHangmanPicture();
+}
+
+init ()
 /*----------------------------- Event Listeners -----------------------------*/
-document.querySelector('.box').addEventListener('click', chooseLetter)
-
+alphaButtons.forEach(button => {
+button.addEventListener('click', () => {
+    handleGuess(button.textContent.toUpperCase());
+    button.disabled = true; // Disable button after click
+});
+});
 

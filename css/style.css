@@ -45,12 +45,18 @@ ul #alpha-selector {
 }
 
 .spaceman-lines {
-    display:ruby;
+    display: flex;
+    justify-content: center;
     color: blue;
     font-weight: 900;
     font-size: 95px;
-    
-}
+    margin-top: 20px;
+  }
+
+  .line {
+    margin: 0 10px; 
+    font-size: 36px;
+  }
 
 button {
     margin: 10px;
@@ -68,7 +74,7 @@ button {
     cursor: grab;
   }
 
- div.hangmen {
+ .hangmen {
     white-space: pre;
     font-size: 40 px;
  }
